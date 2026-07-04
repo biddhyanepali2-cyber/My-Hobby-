@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Multifaceted World | Hobbies & Passions</title>
+    <style>
+        /* --- CSS VARIABLES & THEMING --- */
+        :root {
+            --bg-primary: #121214;
+            --bg-secondary: #1a1a1e;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #6366f1;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --card-bg: #222227;
+            --border-color: #2e2e33;
+        }
+
+        /* --- BASE STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        /* --- HERO SECTION --- */
+        header {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            padding: 4rem 1rem;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        /* --- INTERACTIVE CONTROLS (FILTERS) --- */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+            background: rgba(18, 18, 39, 0.85);
+            padding: 0.75rem;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            max-width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-main);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-gradient);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* --- HOBBIES GRID --- */
+        .hobby-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .hobby-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .hobby-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3), 0 0 15px rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .hobby-icon-wrapper {
+            height: 140px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        /* Unique dynamic accents for different cards */
+        .hobby-card[data-category="action"] .hobby-icon-wrapper { border-bottom: 2px solid #ef4444; }
+        .hobby-card[data-category="nature"] .hobby-icon-wrapper { border-bottom: 2px solid #10b981; }
+        .hobby-card[data-category="growth"] .hobby-icon-wrapper { border-bottom: 2px solid #3b82f6; }
+        .hobby-card[data-category="heart"] .hobby-icon-wrapper { border-bottom: 2px solid #ec4899; }
+
+        .hobby-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hobby-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .hobby-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .hobby-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+
+        /* --- NEW FEATURE: BACK TO TOP BUTTON --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-gradient);
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+        }
+
+        .back-to-top:active {
+            transform: scale(0.95);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- ANIMATIONS & UTILITIES --- */
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.5rem; }
+            .filter-container { border-radius: 20px; width: 100%; }
+            .back-to-top { bottom: 1.5rem; right: 1.5rem; width: 45px; height: 45px; font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="container">
+        <h1>About my hobby</h1>
+        <p>Welcome to my personal canvas. I thrive at the intersections of art, health, growth, and exploration. Here is a glimpse into the things that keep me inspired every single day.</p>
+    </header>
+
+    <div class="filter-container">
+        <button class="filter-btn active" data-filter="all">All Passions</button>
+        <button class="filter-btn" data-filter="action">Action & Movement</button>
+        <button class="filter-btn" data-filter="nature">Nature & Earth</button>
+        <button class="filter-btn" data-filter="growth">Intellect & Growth</button>
+        <button class="filter-btn" data-filter="heart">Heart & Community</button>
+    </div>
+
+    <main class="container">
+        <div class="hobby-grid" id="hobbyGrid">
+            
+            <div class="hobby-card animate-fade" data-category="action">
+                <div class="hobby-icon-wrapper">💃</div>
+                <div class="hobby-content">
+                    <span class="hobby-tag">Action & Movement</span>
+                    <h2 class="hobby-title">Dancing</h2>
+                    <p class="hobby-desc">Expressing rhythm, motion, and emotion without words. Dancing is my ultimate form of freedom, balancing discipline with pure, unadulterated joy.</p>
+                </div>
+            </div>
+
+            <div class="hobby-card animate-fade" data-category="nature">
+                <div class="hobby-icon-wrapper">🌱</div>
+                <div class="hobby-content">
+                    <span class="hobby-tag">Nature & Earth</span>
+                    <h2 class="hobby-title">Planting & Gardening</h2>
+                    <p class="hobby-desc">Nurturing life from seeds to soil. Cultivating greens keeps me grounded, teaches me patience, and turns my living spaces into vibrant sanctuaries.</p>
+                </div>
+            </div>
+
+            <div class="hobby-card animate-fade" data-category="action">
+                <div class="hobby-icon-wrapper">🧭</div>
+                <div class="hobby-content">
+                    <span class="hobby-tag">Action & Exploration</span>
+                    <h2 class="hobby-title">Solo Traveling</h2>
+                    <p class="hobby-desc">Stepping out of comfort zones into unfamiliar corners of the world. Solo trips build my self-reliance, expand my global perspectives, and script endless adventures.</p>
+                </div>
+            </div>
+
+            <div class="hobby-card animate-fade" data-category="growth">
+                <div class="hobby-icon-wrapper">🔥</div>
+                <div class="hobby-content">
+                    <span class="hobby-tag">Intellect & Growth</span>
+                    <h2 class="hobby-title">Motivational Content</h2>
+                    <p class="hobby-desc">Constantly refuel my mental energy. Curating and digesting wisdom from world-class thinkers helps refine my goals and reminds me of human potential.</p>
+                </div>
+            </div>
+
+            <div class="hobby-card animate-fade" data-category="heart">
+                <div class="hobby-icon-wrapper">🏡</div>
+                <div class="hobby-content">
+                    <span class="hobby-tag">Heart & Community</span>
+                    <h2 class="hobby-title">Family Time</h2>
+                    <p class="hobby-desc">My anchor. Amidst all the hustle of hobbies and careers, dedicating intentional, deep quality time with my loved ones is what truly recharges my soul.</p>
+                </div>
+            </div>
+
+            <div class="hobby-card animate-fade" data-category="growth">
+                <div class="hobby-icon-wrapper">🩺</div>
+                <div class="hobby-content">
+                    <span class="hobby-tag">Intellect & Science</span>
+                    <h2 class="hobby-title">The Medical Field</h2>
+                    <p class="hobby-desc">Fascinated by biological science, healthcare innovation, and human anatomy. Keeping up with modern medicine combines intellectual curiosity with a drive to understand healing.</p>
+                </div>
+            </div>
+
+            <div class="hobby-card animate-fade" data-category="growth">
+                <div class="hobby-icon-wrapper">✨</div>
+                <div class="hobby-content">
+                    <span class="hobby-tag">The Horizon</span>
+                    <h2 class="hobby-title">And Many More...</h2>
+                    <p class="hobby-desc">Always learning, always evolving. From photography, reading, and deep conversations, I believe in gathering an endless collection of curiosities throughout life.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <button class="back-to-top" id="backToTopBtn" aria-label="Back to top">↑</button>
+
+    <footer>
+        <p>&copy; 2026 • Designed to showcase a life lived passionately.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const hobbyCards = document.querySelectorAll('.hobby-card');
+    const grid = document.getElementById('hobbyGrid');
+    const backToTopBtn = document.getElementById('backToTopBtn');
+
+    // --- FILTER LOGIC ---
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            const filterValue = button.getAttribute('data-filter');
+            grid.style.opacity = '0';
+
+            setTimeout(() => {
+                hobbyCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+                grid.style.opacity = '1';
+            }, 250); 
+        });
+    });
+
+    // --- SCROLL & AUTOMATIC TOP LOGIC ---
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
+
+        // Check if user reached the absolute bottom of the page
+        if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 5) {
+            // SMOOTHLY AUTO GO BACK TO TOP
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+    </script>
+</body>
+</html>
